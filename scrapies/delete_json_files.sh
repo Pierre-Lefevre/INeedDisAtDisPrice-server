@@ -4,6 +4,6 @@ declare -a stores=("auchan" "boulanger" "cdiscount" "darty" "fnac" "ldlc" "mater
 
 for i in "${stores[@]}"
 do
-    rm -f data/$i/img/*
-    rm -f data/$i/json/*
+    find data/$i/img/* -type f -not -name '.gitignore' -delete
+    find data/$i/json/* -type f -not -name '.gitignore' -delete
 done

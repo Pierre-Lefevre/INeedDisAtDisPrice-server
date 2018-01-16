@@ -8,6 +8,7 @@
 import json
 from scrapy.pipelines.images import ImagesPipeline
 from scrapy.http import Request
+import scrapies.utils as u
 
 
 class JsonWithEncodingPipeline(object):
@@ -19,7 +20,9 @@ class JsonWithEncodingPipeline(object):
         self.file = open('data/' + spider.name + '/json/%s.json' % item["openssl_hash"], 'w')
         line = json.dumps(dict(item), ensure_ascii=False) + "\n"
         # self.file.write(line)
-        self.file.write(line.encode('utf-8'))
+        if u.get_platform() == "Linux":
+            line = line.encode('utf-8')
+        self.file.write(line)
         return item
 
     def spider_closed(self, spider):

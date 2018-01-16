@@ -4,8 +4,8 @@ import sys
 
 CURRENCY_MAPPING = {
     '€': 'EUR',
-    # '$': 'USD',
-    # '£': 'GBP',
+    '$': 'USD',
+    '£': 'GBP',
 }
 
 def get_platform():

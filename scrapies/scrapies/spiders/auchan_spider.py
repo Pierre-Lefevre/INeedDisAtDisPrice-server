@@ -4,6 +4,7 @@ import scrapy
 import glob
 import re
 import scrapies.utils as u
+import scrapies.prices as p
 from scrapy.http import Request
 from scrapies.items import Product
 
@@ -25,7 +26,6 @@ class AuchanSpider(scrapy.Spider):
             if url_next_page is not None:
                 yield Request(self.base_url + url_next_page.strip(), callback=self.parse)
 
-
         # Yield product pages.
         x_list = response.xpath('//div[' + u.x_class('product-list--container') + ']')
         if x_list:
@@ -36,12 +36,10 @@ class AuchanSpider(scrapy.Spider):
                 if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
                     yield Request(url, callback=self.parse)
 
-
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('product-detail') + ']')
         if x_product:
             item = Product()
-
 
             # Categories
             x_categories = response.xpath('//div[' + u.x_class('ui-breadcrumb--scroller') + ']/nav')
@@ -55,7 +53,6 @@ class AuchanSpider(scrapy.Spider):
                 for i, category in enumerate(categories):
                     categories[i] = category.strip()
 
-
             # Brand
             x_brand_name = response.xpath('//div[' + u.x_class('product-detail--wrapper') + ']')
 
@@ -63,32 +60,16 @@ class AuchanSpider(scrapy.Spider):
             if brand is not None:
                 brand = brand.strip()
 
-
             # Name
             name = x_brand_name.xpath('./h1[' + u.x_class('product-detail--title') + ']/text()').extract_first().replace('\n', '').replace('\r', '').strip()
 
-
             # Price
-            x_price = response.xpath('//div[' + u.x_class('pricesBlock') + ']')
-
-            price_old = x_price.xpath('.//del[' + u.x_class('product-price--oldPrice') + ']/text()').extract_first()
-            if price_old is not None:
-                price_old = u.string_to_float(re.sub(' [^ ]*$', '', price_old.strip()).replace(" ", "").replace(" ", ""))
-
-            price = x_price.xpath('.//meta[@itemprop="price"]/@content').extract_first()
-            if price is not None:
-                price = u.string_to_float(price.strip())
-
-            currency = x_price.xpath('.//meta[@itemprop="priceCurrency"]/@content').extract_first()
-            if currency is not None:
-                currency = currency.strip()
-
+            price, price_old, currency = p.get_auchan_prices(response)
 
             # Image
             src = response.xpath('//div[' + u.x_class('x-scroller') + ']/label[1]//img/@src').extract_first()
             if src is not None:
                 src = src.strip()
-
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('product-detail--rating') + ']')
@@ -103,7 +84,6 @@ class AuchanSpider(scrapy.Spider):
 
             max_rate = x_avis.xpath('.//span[' + u.x_class('ui-rating--background') + ']/i[' + u.x_class('icon-auchan-82') + ']').extract()
             max_rate = len(max_rate) if max_rate else None
-
 
             item['store'] = self.name
             item['url'] = response.url
@@ -120,6 +100,5 @@ class AuchanSpider(scrapy.Spider):
             item["rate"] = rate
             item["max_rate"] = max_rate
             item["nb_avis"] = nb_avis
-
 
             yield item

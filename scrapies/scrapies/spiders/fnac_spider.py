@@ -4,6 +4,7 @@ import scrapy
 import glob
 import re
 import scrapies.utils as u
+import scrapies.prices as p
 from scrapy.http import Request
 from shutil import copyfile
 from scrapies.items import Product
@@ -31,7 +32,6 @@ class FnacSpider(scrapy.Spider):
             if url_next_page is not None:
                 yield Request(url_next_page, callback=self.parse)
 
-
         # Yield product pages.
         x_list = response.xpath('//ul[' + u.x_class('articleList') + ']')
         if x_list:
@@ -41,12 +41,10 @@ class FnacSpider(scrapy.Spider):
                 if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
                     yield Request(url, callback=self.parse)
 
-
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('f-productPage') + ']')
         if x_product:
             item = Product()
-
 
             # Categories
             x_categories = response.xpath('//ul[' + u.x_class('f-breadcrumb') + ']')
@@ -60,43 +58,14 @@ class FnacSpider(scrapy.Spider):
                 for i, category in enumerate(categories):
                     categories[i] = category.strip()
 
-
             # Name
             name = response.xpath('//h1[' + u.x_class('f-productHeader-Title') + ']/text()').extract_first().strip()
 
-
             # Price
-            x_price = response.xpath('//div[' + u.x_class('f-priceBox') + ']')
-            x_price_old = x_price.xpath('.//span[' + u.x_class('f-priceBox-price f-priceBox-price--old') + ']')
-            x_price_new = x_price.xpath('.//span[' + u.x_class('f-priceBox-price f-priceBox-price--reco') + ']')
-
-            price_old = x_price_old.xpath('./text()').extract_first()
-            price_cent_old = x_price_old.xpath('./sup/text()').extract_first()
-            if price_old is not None:
-                if price_cent_old is not None:
-                    price_old = u.string_to_float((price_old + "," + price_cent_old[1:].strip()).replace(" ", ""))
-                else:
-                    price_old = u.string_to_float(price_old[:-1].strip().replace(" ", ""))
-
-            price = x_price_new.xpath('./text()').extract_first()
-            price_cent = x_price_new.xpath('./sup/text()').extract_first()
-
-            currency = None
-            if price_cent is not None:
-                currency = u.get_currency_code(price_cent[:1])
-            elif price is not None:
-                currency = u.get_currency_code(price[-1:])
-
-            if price is not None:
-                if price_cent is not None:
-                    price = u.string_to_float((price + "," + price_cent[1:].strip()).replace(" ", ""))
-                else:
-                    price = u.string_to_float(price[:-1].strip().replace(" ", ""))
-
+            price, price_old, currency = p.get_fnac_prices(response)
 
             # Image
             src = response.xpath('//img[' + u.x_class('f-productVisuals-mainMedia') + ']/@src').extract_first().strip()
-
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('f-review-header') + ']')
@@ -112,7 +81,6 @@ class FnacSpider(scrapy.Spider):
             nb_avis = response.xpath('//div[' + u.x_class('f-productHeader-review') + ']//span[' + u.x_class('f-productHeader-reviewLabel') + ']/text()').extract_first()
             if nb_avis is not None:
                 nb_avis = u.string_to_float(re.sub("\D", "", nb_avis.strip()))
-
 
             item['store'] = self.name
             item['url'] = response.url
@@ -130,9 +98,7 @@ class FnacSpider(scrapy.Spider):
             item["max_rate"] = max_rate
             item["nb_avis"] = nb_avis
 
-
             if src == self.src_no_image:
                 copyfile("data/default.jpg", "data/" + self.name + "/img/" + item["image_name"] + ".jpg")
-
 
             yield item

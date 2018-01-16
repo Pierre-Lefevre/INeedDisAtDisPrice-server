@@ -4,6 +4,7 @@ import scrapy
 import glob
 import re
 import scrapies.utils as u
+import scrapies.prices as p
 from scrapy.http import Request
 from scrapies.items import Product
 
@@ -29,12 +30,10 @@ class LdlcSpider(scrapy.Spider):
                 if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
                     yield Request(url, callback=self.parse)
 
-
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('product') + ']')
         if x_product:
             item = Product()
-
 
             # Categories
             x_categories = response.xpath('//ul[' + u.x_class('cheminDeFer') + ']')
@@ -48,41 +47,19 @@ class LdlcSpider(scrapy.Spider):
                 for i, category in enumerate(categories):
                     categories[i] = category.strip()
 
-
             # Brand
             brand = response.xpath('//table[@id="productParametersList"]//div[text()="Marque"]/following::div[1]/a/text()').extract_first()
             if brand is not None:
                 brand = brand.strip()
 
-
             # Name
             name = re.sub(' +', ' ', response.xpath('//h1/span[' + u.x_class('fn designation_courte') + ']/text()').extract_first().strip())
 
-
             # Price
-            x_price = response.xpath('//span[' + u.x_class('blocprix') + ']')
-
-            price_old = x_price.xpath('.//span[' + u.x_class('refPrice') + ']/text()').extract_first()
-            if price_old is not None:
-                price_old = u.string_to_float(price_old[:-1].strip().replace(" ", "").replace(" ", ""))
-
-            price = x_price.xpath('.//span[' + u.x_class('price') + ']/text()').extract_first()
-            price_cent = x_price.xpath('.//span[' + u.x_class('price') + ']/sup/text()').extract_first()
-
-            currency = None
-            if price is not None:
-                currency = u.get_currency_code(price[-1:])
-
-            if price is not None:
-                if price_cent is not None:
-                    price = u.string_to_float((price[:-1].strip() + "," + price_cent.strip()).replace(" ", "").replace(" ", ""))
-                else:
-                    price = u.string_to_float(price[:-1].strip().replace(" ", "").replace(" ", ""))
-
+            price, price_old, currency = p.get_ldlc_prices(response)
 
             # Image
             src = response.xpath('//img[@id="ctl00_cphMainContent_ImgProduct"]/@src').extract_first().strip()
-
 
             # Avis
             x_avis = response.xpath('//div[@id="productinfos"]//span[' + u.x_class('rating') + ']')
@@ -99,7 +76,6 @@ class LdlcSpider(scrapy.Spider):
             if max_rate is not None:
                 max_rate = int(max_rate.strip())
 
-
             item['store'] = self.name
             item['url'] = response.url
             item['main_category'] = main_category
@@ -115,6 +91,5 @@ class LdlcSpider(scrapy.Spider):
             item["rate"] = rate
             item["max_rate"] = max_rate
             item["nb_avis"] = nb_avis
-
 
             yield item

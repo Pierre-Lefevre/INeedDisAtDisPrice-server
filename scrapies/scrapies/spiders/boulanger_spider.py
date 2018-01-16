@@ -5,6 +5,7 @@ import glob
 import re
 import time
 import scrapies.utils as u
+import scrapies.prices as p
 from scrapy.http import Request
 from scrapies.items import Product
 
@@ -26,7 +27,6 @@ class BoulangerSpider(scrapy.Spider):
             if url_next_page is not None:
                 yield Request(self.base_url + url_next_page.strip(), callback=self.parse)
 
-
         # Yield product pages.
         x_list = response.xpath('//div[' + u.x_class('productListe') + ']')
         if x_list:
@@ -37,12 +37,10 @@ class BoulangerSpider(scrapy.Spider):
                 if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
                     yield Request(url, callback=self.parse)
 
-
         # Yield product.
         x_product = response.xpath('//h1[@itemprop="name"]')
         if x_product:
             item = Product()
-
 
             # Categories
             x_categories = response.xpath('//div[@id="filAriane"]')
@@ -56,41 +54,16 @@ class BoulangerSpider(scrapy.Spider):
                 for i, category in enumerate(categories):
                     categories[i] = category.strip()
 
-
             # Name
             name = re.sub(' +', ' ', ''.join(x_product.xpath('./text()').extract()).replace('\n', '').replace('\r', '').strip())
 
-
             # Price
-            x_info = response.xpath('//div[' + u.x_class('informations') + ']')
-            x_price = x_info.xpath('.//div[' + u.x_class('price') + ']')
-
-            price_old = x_price.xpath('./span[' + u.x_class('productStrikeoutPrice on') + ']//span[' + u.x_class('exponent') + ']/text()').extract_first()
-            price_cent_old = x_price.xpath('./span[' + u.x_class('productStrikeoutPrice on') + ']//sup/span[' + u.x_class('fraction') + ']/text()').extract_first()
-            if price_old is not None:
-                if price_cent_old is not None:
-                    price_old = u.string_to_float((price_old.strip() + "," + price_cent_old.strip()).replace(" ", ""))
-                else:
-                    price_old = u.string_to_float(price_old.strip().replace(" ", ""))
-
-            price = x_price.xpath('./p/span[' + u.x_class('exponent') + ']/text()').extract_first()
-            price_cent = x_price.xpath('./p/sup/span[' + u.x_class('fraction') + ']/text()').extract_first()
-            if price is not None:
-                if price_cent is not None:
-                    price = u.string_to_float((price.strip() + "," + price_cent.strip()).replace(" ", ""))
-                else:
-                    price = u.string_to_float(price.strip().replace(" ", ""))
-
-            currency = x_price.xpath('./p/sup/text()').extract_first()
-            if currency is not None:
-                currency = u.get_currency_code(currency.strip())
-
+            price, price_old, currency = p.get_boulanger_prices(response)
 
             # Image
             src = response.xpath('//span[@itemprop="gtin13"]/text()').extract_first().strip()
             if src is not None:
                 src = "https://boulanger.scene7.com/is/image/Boulanger/" + src + "_h_f_l_0"
-
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('top') + ']/div[' + u.x_class('right') + ']//span[' + u.x_class('rating') + ']')
@@ -109,7 +82,6 @@ class BoulangerSpider(scrapy.Spider):
             if nb_avis is not None:
                 nb_avis = int(re.sub('\D', '', nb_avis.strip()))
 
-
             item['store'] = self.name
             item['url'] = response.url
             item['main_category'] = main_category
@@ -126,6 +98,5 @@ class BoulangerSpider(scrapy.Spider):
             item["max_rate"] = 5
             item["nb_avis"] = nb_avis
             item["price_history"] = [{'date': time.strftime("%Y/%m/%d"), 'price_old': price_old, 'price': price, 'currency': currency}]
-
 
             yield item

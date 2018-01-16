@@ -4,6 +4,7 @@ import scrapy
 import glob
 import re
 import scrapies.utils as u
+import scrapies.prices as p
 from scrapy.http import Request
 from scrapies.items import Product
 
@@ -27,7 +28,6 @@ class MaterielNetSpider(scrapy.Spider):
             if url_next_page is not None:
                 yield Request(self.base_url + url_next_page, callback=self.parse)
 
-
         # Yield product pages.
         x_list = response.xpath('//table[' + u.x_class('ProdList') + ']')
         if x_list:
@@ -38,12 +38,10 @@ class MaterielNetSpider(scrapy.Spider):
                 if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
                     yield Request(url, callback=self.parse)
 
-
         # Yield product.
         x_product = response.xpath('//div[@id="prod"]')
         if x_product:
             item = Product()
-
 
             # Categories
             x_categories = response.xpath('//nav[@id="breadcrumb"]')
@@ -53,39 +51,21 @@ class MaterielNetSpider(scrapy.Spider):
                 for i, category in enumerate(categories):
                     categories[i] = category.strip()
 
-
             # Brand
             brand = x_categories.xpath('.//li[2]/a/text()').extract_first()
             if brand is not None:
                 brand = brand.strip()
 
-
             # Name
             name = re.sub(' +', ' ', ''.join(response.xpath('//h1[@id="ProdTitle"]//text()').extract()).replace('\n', '').replace('\r', '').strip())
 
-
             # Price
-            x_price = response.xpath('//div[@id="ProdInfoPrice"]')
-
-            price_old = x_price.xpath('./div[' + u.x_class('prixReference') + ']/text()').extract_first()
-            if price_old is not None:
-                price_old = u.string_to_float(re.sub(' \D*$', '', price_old.strip()).replace(" ", ""))
-
-            price = x_price.xpath('./span[' + u.x_class('hidden') + ']/text()').extract_first()
-
-            currency = None
-            if price is not None:
-                currency = u.get_currency_code(re.sub('^.*\d | [^ ]*$', '', price.strip()))
-
-            if price is not None:
-                price = u.string_to_float(re.sub(' \D*$', '', price.strip()).replace(" ", ""))
-
+            price, price_old, currency = p.get_materiel_net_prices(response)
 
             # Image
             src = response.xpath('//div[' + u.x_class('swiper-wrapper') + ']//a/@data-zoom-image').extract_first()
             if src is not None:
                 src = src.strip()
-
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('headerAvisClients') + ']')
@@ -102,7 +82,6 @@ class MaterielNetSpider(scrapy.Spider):
             if nb_avis is not None:
                 nb_avis = int(nb_avis.strip())
 
-
             item['store'] = self.name
             item['url'] = response.url
             item['main_category'] = "Informatique"
@@ -118,6 +97,5 @@ class MaterielNetSpider(scrapy.Spider):
             item["rate"] = rate
             item["max_rate"] = max_rate
             item["nb_avis"] = nb_avis
-
 
             yield item

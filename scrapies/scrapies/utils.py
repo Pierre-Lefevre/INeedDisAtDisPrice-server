@@ -8,16 +8,18 @@ CURRENCY_MAPPING = {
     '£': 'GBP',
 }
 
+
 def get_platform():
     platforms = {
-        'linux1' : 'Linux',
-        'linux2' : 'Linux',
-        'darwin' : 'OS X',
-        'win32' : 'Windows'
+        'linux1': 'Linux',
+        'linux2': 'Linux',
+        'darwin': 'OS X',
+        'win32': 'Windows'
     }
     if sys.platform not in platforms:
         return sys.platform
     return platforms[sys.platform]
+
 
 def generate_open_ssl_hash(name):
     hash_object = hashlib.new('DSA')

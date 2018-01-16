@@ -2,7 +2,7 @@
 import scrapy
 
 import glob
-import re
+import time
 import scrapies.utils as u
 import scrapies.prices as p
 from scrapy.http import Request
@@ -100,5 +100,6 @@ class AuchanSpider(scrapy.Spider):
             item["rate"] = rate
             item["max_rate"] = max_rate
             item["nb_avis"] = nb_avis
+            item["price_history"] = [{'date': time.strftime("%Y/%m/%d"), 'price_old': price_old, 'price': price, 'currency': currency}]
 
             yield item

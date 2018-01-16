@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-import glob
-import re
 import time
-import scrapies.utils as u
-import scrapies.prices as p
-from scrapy.http import Request
-from scrapies.items import Product
-from pymongo import MongoClient
 import tldextract
+import scrapies.prices as p
+from pymongo import MongoClient
 
 
 class CronSpider(scrapy.Spider):

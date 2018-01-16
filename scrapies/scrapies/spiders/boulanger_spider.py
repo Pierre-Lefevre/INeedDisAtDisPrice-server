@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-import glob
 import re
+import glob
 import time
 import scrapies.utils as u
 import scrapies.prices as p

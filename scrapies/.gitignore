@@ -1,0 +1,17 @@
+data/auchan/img/
+!data/auchan/img/.gitignore
+data/auchan/json/
+data/boulanger/img/
+data/boulanger/json/
+data/cdiscount/img/
+data/cdiscount/json/
+data/darty/img/
+data/darty/json/
+data/fnac/img/
+data/fnac/json/
+data/ldlc/img/
+data/ldlc/json/
+data/materiel_net/img/
+data/materiel_net/json/
+data/rue_du_commerce/img/
+data/rue_du_commerce/json/

@@ -2,12 +2,13 @@
 import scrapy
 
 import re
-import glob
 import time
 import scrapies.utils as u
 import scrapies.prices as p
+from scrapy import signals
 from scrapy.http import Request
 from scrapies.items import Product
+from scrapy.xlib.pydispatch import dispatcher
 
 
 class BoulangerSpider(scrapy.Spider):
@@ -17,6 +18,13 @@ class BoulangerSpider(scrapy.Spider):
     start_urls = [
         base_url + '/c/tous-les-ordinateurs-portables'
     ]
+    already_crawled = u.get_already_crawled()
+
+    def __init__(self):
+        dispatcher.connect(self.spider_closed, signals.spider_closed)
+
+    def spider_closed(self, spider):
+        u.update_already_crawled(self.already_crawled)
 
     def parse(self, response):
 
@@ -34,7 +42,8 @@ class BoulangerSpider(scrapy.Spider):
             for url in urls:
                 url = self.base_url + url.strip()
                 open_ssl_hash = u.generate_open_ssl_hash(url)
-                if len(glob.glob("data/" + self.name + "/json/" + open_ssl_hash + '.json')) != 1 or len(glob.glob("data/" + self.name + "/img/" + open_ssl_hash + '.jpg')) != 1:
+                if open_ssl_hash not in self.already_crawled:
+                    self.already_crawled.append(open_ssl_hash)
                     yield Request(url, callback=self.parse)
 
         # Yield product.

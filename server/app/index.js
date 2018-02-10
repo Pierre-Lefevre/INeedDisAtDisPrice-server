@@ -5,23 +5,28 @@ const express = require('express'),
   expressValidator = require('express-validator'),
   mongoose = require('mongoose'),
   cors = require('cors'),
+  config = require('../config/config'),
   products = require('./products'),
-  url = 'mongodb://localhost:27017/iNeedDisAtDisPrice',
-  port = 4242
+  images = require('./images'),
+  users = require('./users'),
+  alerts = require('./alerts')
 
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cors())
 app.use(products)
+app.use(images)
+app.use(users)
+app.use(alerts)
 
-mongoose.connect(url, function (err, db) {
+mongoose.connect(config.mongoUrl, function (err, db) {
   if (err) {
     console.log('Unable to connect to the MongoDB server (' + err + ')')
   } else {
-    console.log('Connection established with the MongoDB server (' + url + ')')
+    console.log('Connection established with the MongoDB server (' + config.mongoUrl + ')')
   }
 })
 
-app.listen(port, function () {
-  console.log('i-need-dis-at-dis-price-server listening on port : ' + port + '.')
+app.listen(config.portListen, function () {
+  console.log('i-need-dis-at-dis-price-server listening on port : ' + config.portListen + '.')
 })

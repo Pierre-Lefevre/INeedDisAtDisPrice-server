@@ -16,8 +16,10 @@ class JsonWithEncodingPipeline(object):
         self.file = ""
 
     def process_item(self, item, spider):
-        # self.file = open('data/' + spider.name + '/json/%s.json' % item["openssl_hash"], 'w', encoding='utf-8')
-        self.file = open('data/' + spider.name + '/json/%s.json' % item["openssl_hash"], 'w')
+        if u.get_platform() == "Windows":
+            self.file = open('data/' + spider.name + '/json/%s.json' % item["openssl_hash"], 'w', encoding='utf-8')
+        else:
+            self.file = open('data/' + spider.name + '/json/%s.json' % item["openssl_hash"], 'w')
         line = json.dumps(dict(item), ensure_ascii=False) + "\n"
         # self.file.write(line)
         if u.get_platform() == "Linux":

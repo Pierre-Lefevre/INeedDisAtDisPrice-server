@@ -28,7 +28,7 @@ async function checkAlerts () {
     let product = await Products.findOne({_id: alert.id_product})
 
 
-    product.price = 0
+    // product.price = 0
     if (!alert.done && product.price <= alert.price) {
       let user = await Users.findOne({_id: alert.id_user})
       await sendEmail({

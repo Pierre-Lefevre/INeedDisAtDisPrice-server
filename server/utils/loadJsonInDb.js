@@ -11,6 +11,8 @@ async function loadJsonInDb () {
 
   await mongoose.connect(config.mongoUrl)
 
+  await Products.collection.remove()
+
   let stores = ['auchan', 'boulanger', 'cdiscount', 'darty', 'fnac', 'ldlc', 'materiel_net', 'rue_du_commerce']
   let jsonFolders = []
   let newIds = []
@@ -39,27 +41,45 @@ async function loadJsonInDb () {
   // Récupère tous les produits.
   let allProducts = await Products.find()
 
-  let allWordsWithFrequence = await Products.aggregate([
-    {
-      $project: {
-        words: {$split: [{$toLower: '$name'}, ' ']}
+  // let allWordsWithFrequence = await Products.aggregate([
+  //   {
+  //     $project: {
+  //       words: {$split: [{$toLower: '$name'}, ' ']}
+  //     }
+  //   },
+  //   {
+  //     $unwind: {
+  //       path: '$words'
+  //     }
+  //   },
+  //   {
+  //     $group: {
+  //       _id: '$words',
+  //       count: {$sum: 1}
+  //     }
+  //   },
+  //   {
+  //     $sort: {count: -1}
+  //   }
+  // ])
+
+  let allWordsWithFrequenceObject = {}
+  await utils.asyncForEach(allProducts, async (product) => {
+    let splitName = product.name.split(' ')
+    splitName.forEach(word => {
+      if (allWordsWithFrequenceObject.hasOwnProperty(word.toLowerCase())) {
+        allWordsWithFrequenceObject[word.toLowerCase()]++
+      } else {
+        allWordsWithFrequenceObject[word.toLowerCase()] = 1
       }
-    },
-    {
-      $unwind: {
-        path: '$words'
-      }
-    },
-    {
-      $group: {
-        _id: '$words',
-        count: {$sum: 1}
-      }
-    },
-    {
-      $sort: {count: -1}
-    }
-  ])
+    })
+  })
+
+  let allWordsWithFrequence = []
+  Object.keys(allWordsWithFrequenceObject).filter((key, i) => {
+    allWordsWithFrequence.push({word: key, count: allWordsWithFrequenceObject[key]})
+  })
+  allWordsWithFrequence.sort((a, b) => {return a.count < b.count ? 1 : -1})
 
   allWordsWithFrequence.every(word => {
 
@@ -105,13 +125,13 @@ async function loadJsonInDb () {
     }
   })
 
-  jsonFolders.forEach(jsonFolder => {
-    fs.readdirSync(jsonFolder).forEach(file => {
-      if (file.endsWith('.json')) {
-        fs.unlinkSync(path.join(jsonFolder, file))
-      }
-    })
-  })
+  // jsonFolders.forEach(jsonFolder => {
+  //   fs.readdirSync(jsonFolder).forEach(file => {
+  //     if (file.endsWith('.json')) {
+  //       fs.unlinkSync(path.join(jsonFolder, file))
+  //     }
+  //   })
+  // })
 
   process.exit()
 }

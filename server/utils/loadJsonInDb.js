@@ -5,35 +5,34 @@ const fs = require('fs'),
   utils = require('./utils'),
   Products = require('../models/Products.js')
 
-mongoose.connect(config.mongoUrl)
+loadJsonInDb()
 
-Products.collection.remove()
+async function loadJsonInDb () {
 
-let stores = ['auchan', 'boulanger', 'cdiscount', 'darty', 'fnac', 'ldlc', 'materiel_net', 'rue_du_commerce']
-let jsonFolders = []
-let newIds = []
-let documents = []
-let frequentWords = []
+  await mongoose.connect(config.mongoUrl)
 
-stores.forEach(store => {
-  jsonFolders.push(path.join(__dirname, '..', '..', 'scrapies', 'data', store, 'json'))
-})
+  let stores = ['auchan', 'boulanger', 'cdiscount', 'darty', 'fnac', 'ldlc', 'materiel_net', 'rue_du_commerce']
+  let jsonFolders = []
+  let newIds = []
+  let documents = []
+  let frequentWords = []
 
-jsonFolders.forEach(jsonFolder => {
-  fs.readdirSync(jsonFolder).forEach(file => {
-    if (file.endsWith('.json')) {
-      try {
-        documents.push(JSON.parse(fs.readFileSync(path.join(jsonFolder, file), 'utf8')))
-      } catch (e) {
-        console.log(e.message)
-      }
-    }
+  stores.forEach(store => {
+    jsonFolders.push(path.join(__dirname, '..', '..', 'scrapies', 'data', store, 'json'))
   })
-})
 
-insertAndUpdateSimilarities()
+  jsonFolders.forEach(jsonFolder => {
+    fs.readdirSync(jsonFolder).forEach(file => {
+      if (file.endsWith('.json')) {
+        try {
+          documents.push(JSON.parse(fs.readFileSync(path.join(jsonFolder, file), 'utf8')))
+        } catch (e) {
+          console.log(e.message)
+        }
+      }
+    })
+  })
 
-async function insertAndUpdateSimilarities () {
   //Récupère les produits insérés.
   let newProducts = await Products.create(documents)
 
@@ -79,7 +78,7 @@ async function insertAndUpdateSimilarities () {
   await utils.asyncForEach(newProducts, async (product1) => {
     product1.similarities = []
     await utils.asyncForEach(allProducts, async (product2) => {
-      if (!product1._id.equals(product2._id) && (editDistancePercentSimilarity(product1.name, product2.name) > 0.9 || wordPercentSimilarity(product1.name, product2.name) > 0.8)) {
+      if (!product1._id.equals(product2._id) && (editDistancePercentSimilarity(product1.name, product2.name) > 0.9 || wordPercentSimilarity(frequentWords, product1.name, product2.name) > 0.8)) {
         product1.similarities.push(product2._id.toString())
         if (newIds.indexOf(product2._id.toString()) === -1 && product2.similarities.indexOf(product1._id.toString()) === -1) {
           product2.similarities.push(product1._id.toString())
@@ -117,18 +116,12 @@ async function insertAndUpdateSimilarities () {
   process.exit()
 }
 
-function lowerCaseArray (arr) {
-  arr.forEach((word, i) => {
-    arr[i] = word.toLowerCase()
-  })
-}
-
-function wordPercentSimilarity (s1, s2) {
+function wordPercentSimilarity (frequentWords, s1, s2) {
   let s1Split = s1.split(' ')
   let s2Split = s2.split(' ')
 
-  lowerCaseArray(s1Split)
-  lowerCaseArray(s2Split)
+  utils.lowerCaseArray(s1Split)
+  utils.lowerCaseArray(s2Split)
 
   s1Split.forEach((word, i) => {
     if (word === '+' || word === '-') {

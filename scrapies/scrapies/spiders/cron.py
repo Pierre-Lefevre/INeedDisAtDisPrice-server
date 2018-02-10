@@ -32,7 +32,6 @@ class CronSpider(scrapy.Spider):
     def parse(self, response):
         url_extract = tldextract.extract(response.url)
         price, price_old, currency = self.prices_function[url_extract.domain](response)
-        price = 12
         self.db.iNeedDisAtDisPrice.products.update(
             {"url": response.url},
             {

@@ -41,7 +41,7 @@ class CdiscountSpider(scrapy.Spider):
         # Yield product pages.
         x_list = response.xpath('//ul[@id="lpBloc"]')
         if x_list:
-            urls = x_list.xpath('.//div[' + u.x_class('prdtBloc') + ']/a/@href').extract()
+            urls = x_list.xpath('.//div[' + u.x_class('prdtBILDetails') + ']/a/@href').extract()
             for url in urls:
                 url = url.strip()
                 open_ssl_hash = u.generate_open_ssl_hash(url)

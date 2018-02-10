@@ -6,32 +6,30 @@ const mongoose = require('mongoose'),
   Products = require('../models/Products.js'),
   Users = require('../models/Users.js')
 
-mongoose.connect(config.mongoUrl)
-
-let transporter = nodemailer.createTransport({
-  pool: true,
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'lefevre.pierre.m.d@gmail.com',
-    pass: 'cilalvetraee'
-  }
-})
-
 checkAlerts()
 
 async function checkAlerts () {
+
+  await mongoose.connect(config.mongoUrl)
+
+  let transporter = nodemailer.createTransport({
+    pool: true,
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'lefevre.pierre.m.d@gmail.com',
+      pass: 'cilalvetraee'
+    }
+  })
+
   let alerts = await Alerts.find()
 
   await utils.asyncForEach(alerts, async (alert) => {
     let product = await Products.findOne({_id: alert.id_product})
-
-
-    // product.price = 0
     if (!alert.done && product.price <= alert.price) {
       let user = await Users.findOne({_id: alert.id_user})
-      await sendEmail({
+      await sendEmail(transporter, {
         from: 'lefevre.pierre.m.d@gmail.com',
         to: user.email,
         subject: 'I Need Dis At Dis Price - Alerte prix',
@@ -42,15 +40,15 @@ async function checkAlerts () {
         '<p style="margin-top: 30px">Cordialement,</p>' +
         '<p>L\'équipe <b>I Need Dis At Dis Price</b>.</p>'
       })
-      // alert.done = true
-      // await alert.save()
+      alert.done = true
+      await alert.save()
     }
   })
 
   process.exit()
 }
 
-async function sendEmail (mailOptions) {
+async function sendEmail (transporter, mailOptions) {
   await transporter.sendMail(mailOptions).then(function (info) {
     console.log('Message sent: ' + info.messageId)
   }).catch(function (err) {

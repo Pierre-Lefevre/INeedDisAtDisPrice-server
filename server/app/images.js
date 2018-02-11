@@ -3,7 +3,11 @@ const express = require('express'),
   router = express.Router()
 
 router.get('/api/image/:store/:name', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', '..', 'scrapies', 'data', req.params.store, 'img', req.params.name))
+  if (req.params.name === 'default.jpg') {
+    res.sendFile(path.join(__dirname, '..', '..', 'scrapies', 'data', req.params.name))
+  } else {
+    res.sendFile(path.join(__dirname, '..', '..', 'scrapies', 'data', req.params.store, 'img', req.params.name))
+  }
 })
 
 module.exports = router

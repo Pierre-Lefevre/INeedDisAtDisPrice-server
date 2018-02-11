@@ -6,7 +6,8 @@ const usersSchema = new Schema({
   id_user: String,
   id_product: String,
   price: String,
-  done: {type: Boolean, default: false}
+  done: {type: Boolean, default: false},
+  product: Object
 }, {
   strict: false,
   versionKey: false

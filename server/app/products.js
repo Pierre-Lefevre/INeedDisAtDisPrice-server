@@ -10,8 +10,16 @@ router.get('/api/products', async function (req, res) {
   let page = req.query.page && typeof parseInt(req.query.page) === 'number' ? req.query.page : 1
   let pageSize = 40
 
+  let splitSearch = req.query.search.toLowerCase().split(' ')
+
+  let regex = ''
+  splitSearch.forEach(word => {
+    regex += '(?=.*\\b' + word + '\\b)'
+  })
+  regex += '.*'
+
   if (req.query.search) {
-    query.name = {$regex: '.*' + req.query.search.toLowerCase() + '.*', $options: 'i'}
+    query.name = {$regex: regex, $options: 'i'}
   }
 
   let products = await Products.find(query).skip(pageSize * (page - 1)).limit(pageSize)

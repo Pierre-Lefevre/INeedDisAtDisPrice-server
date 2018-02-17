@@ -1,6 +1,6 @@
 # INeedDisAtDisPrice-server
 
-## Raspberry
+## Raspberry Pi
 
 ### Crontab
 

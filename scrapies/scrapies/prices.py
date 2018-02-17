@@ -107,9 +107,9 @@ def get_fnac_prices(response):
 
     currency = None
     if price_cent is not None:
-        currency = u.get_currency_code(price_cent[:1].encode('utf-8').strip())
+        currency = u.get_currency_code(price_cent[:1].strip())
     elif price is not None:
-        currency = u.get_currency_code(price[-1:].encode('utf-8').strip())
+        currency = u.get_currency_code(price[-1:].strip())
 
     if price is not None:
         if price_cent is not None:
@@ -132,7 +132,7 @@ def get_ldlc_prices(response):
 
     currency = None
     if price is not None:
-        currency = u.get_currency_code(price[-1:].encode('utf-8').strip())
+        currency = u.get_currency_code(price[-1:].strip())
 
     if price is not None:
         if price_cent is not None:
@@ -154,7 +154,7 @@ def get_materiel_net_prices(response):
 
     currency = None
     if price is not None:
-        currency = u.get_currency_code(re.sub('^.*\d | [^ ]*$', '', price.encode('utf-8').strip()))
+        currency = u.get_currency_code(re.sub('^.*\d | [^ ]*$', '', price.strip()))
 
     if price is not None:
         price = u.string_to_float(re.sub(' \D*$', '', price.encode('utf-8').strip()).replace(" ", ""))
@@ -174,7 +174,7 @@ def get_rue_du_commerce_prices(response):
 
     currency = None
     if price is not None:
-        currency = u.get_currency_code(price_cent[:1].encode('utf-8').strip())
+        currency = u.get_currency_code(price_cent[:1].strip())
 
     if price is not None:
         if price_cent is not None:

@@ -5,7 +5,7 @@ let Schema = mongoose.Schema
 const usersSchema = new Schema({
   id_user: String,
   id_product: String,
-  price: String,
+  price: Number,
   done: {type: Boolean, default: false},
   product: Object
 }, {

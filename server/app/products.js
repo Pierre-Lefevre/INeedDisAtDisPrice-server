@@ -75,8 +75,8 @@ router.get('/api/products', async function (req, res) {
   res.json({products, nbPage, min, max})
 })
 
-router.get('/api/product/:id', async function (req, res) {
-  let product = await Products.findOne({'_id': req.params.id})
+router.get('/api/product', async function (req, res) {
+  let product = await Products.findOne({'_id': req.query.id})
   if (!fs.existsSync(path.join(__dirname, '..', '..', 'scrapies', 'data', product.store, 'img', product.image_name + '.jpg'))) {
     product.image_name = 'default'
   }

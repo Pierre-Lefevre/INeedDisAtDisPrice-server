@@ -26,8 +26,8 @@ async function checkAlerts () {
   let alerts = await Alerts.find()
 
   await utils.asyncForEach(alerts, async (alert) => {
-    let product = await Products.findOne({_id: alert.id_product})
-    if (!alert.done && product.price <= alert.price) {
+    let product = await Products.findOne({_id: alert.id_product, done: false})
+    if (product.price <= alert.price) {
       let user = await Users.findOne({_id: alert.id_user})
       await sendEmail(transporter, {
         from: 'lefevre.pierre.m.d@gmail.com',
@@ -51,7 +51,7 @@ async function checkAlerts () {
 async function sendEmail (transporter, mailOptions) {
   await transporter.sendMail(mailOptions).then(function (info) {
     console.log('Message sent: ' + info.messageId)
-  }).catch(function (err) {
-    console.log(err)
+  }).catch(function (e) {
+    console.log(e.message)
   })
 }

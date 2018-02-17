@@ -41,6 +41,7 @@ async function loadJsonInDb () {
   // Récupère tous les produits.
   let allProducts = await Products.find()
 
+  // Ne fonctionne pas sur le Raspberry Pi, version de MongoDB incorrecte.
   // let allWordsWithFrequence = await Products.aggregate([
   //   {
   //     $project: {
@@ -125,13 +126,13 @@ async function loadJsonInDb () {
     }
   })
 
-  // jsonFolders.forEach(jsonFolder => {
-  //   fs.readdirSync(jsonFolder).forEach(file => {
-  //     if (file.endsWith('.json')) {
-  //       fs.unlinkSync(path.join(jsonFolder, file))
-  //     }
-  //   })
-  // })
+  jsonFolders.forEach(jsonFolder => {
+    fs.readdirSync(jsonFolder).forEach(file => {
+      if (file.endsWith('.json')) {
+        fs.unlinkSync(path.join(jsonFolder, file))
+      }
+    })
+  })
 
   process.exit()
 }
@@ -165,15 +166,7 @@ function wordPercentSimilarity (frequentWords, s1, s2) {
   s1Split = s1Split.diff(frequentWords)
   s2Split = s2Split.diff(frequentWords)
 
-  return (s1Split.length - s1Split.diff(s2Split).length) * 2 / (s1Split.length + s2Split.length)
-
-  // let percent = (s1Split.length - s1Split.diff(s2Split).length) * 2 / (s1Split.length + s2Split.length)
-  // if (percent > 0.8) {
-  //   console.log(s1Split)
-  //   console.log(s2Split)
-  //   console.log('--------')
-  // }
-  // return percent
+  return (s1Split.length + s2Split.length - s1Split.diff(s2Split).length - s2Split.diff(s1Split).length) / (s1Split.length + s2Split.length)
 }
 
 function editDistancePercentSimilarity (s1, s2) {
@@ -193,6 +186,13 @@ function editDistancePercentSimilarity (s1, s2) {
   }
   return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength)
 }
+
+/*
+Copyright (c) 2011 Andrei Mackenzie
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 function editDistance (a, b) {
   if (a.length === 0) return b.length

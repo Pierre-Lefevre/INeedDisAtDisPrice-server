@@ -16,7 +16,12 @@ class BoulangerSpider(scrapy.Spider):
     allowed_domains = ["boulanger.com"]
     base_url = "https://www.boulanger.com"
     start_urls = [
-        base_url + '/c/tous-les-ordinateurs-portables'
+        base_url + '/c/tous-les-ordinateurs-portables',
+        base_url + '/c/tous-les-ordinateurs-de-bureau',
+        base_url + '/c/toutes-les-tablettes-tactiles',
+        base_url + '/c/disque-dur-externe',
+        base_url + '/c/disque-ssd',
+        base_url + '/c/memoire-vive'
     ]
     already_crawled = u.get_already_crawled()
 

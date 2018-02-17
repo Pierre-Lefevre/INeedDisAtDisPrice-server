@@ -21,7 +21,7 @@ class FnacSpider(scrapy.Spider):
         base_url + '/Tous-les-PC-de-bureau/Ordinateur-de-bureau/nsh51426/w-4?PageIndex=1',
         base_url + '/Toutes-les-tablettes/Toutes-les-tablettes/nsh227099/w-4?PageIndex=1',
         base_url + '/Tous-les-disques-durs/Disque-Dur/nsh119663/w-4?PageIndex=1',
-        base_url + '/SearchResult/ResultList.aspx?SCat=8!1%2c8136!2&Search=ramPageIndex=1',
+        base_url + '/Memoire-ordinateur-de-bureau/Composants/nsh181559/w-4#bl=MICComposantsARBO',
     ]
     src_no_image = "https://www4-fr.fnac-static.com/Nav/Images/Noscan/noscan_340x340.gif"
     already_crawled = u.get_already_crawled()

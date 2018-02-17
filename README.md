@@ -10,11 +10,11 @@ Modifier la crontab :
 $ crontab -e
 ```
 
-Le script bash cron.sh sera exécuté toutes les minutes :
+Le script bash cron.sh sera exécuté tous les jours à minuit :
 
 ```bash
 m h  dom mon dow   command
-* * * * * bash ~/INeedDisAtDisPrice-server/cron.sh
+0 0 * * * bash ~/INeedDisAtDisPrice-server/cron.sh
 ```
 
 ### Mongo
@@ -25,18 +25,12 @@ Lancer le serveur Mongo :
 $ sudo mongod
 ```
 
-### I Need Dis At Dis Price - serveur
+### API
 
-Lancer le serveur de l'application :
+Lancer l'API :
 
 ```bash
-$ cd ~/INeedDisAtDisPrice/server
+$ cd ~/INeedDisAtDisPrice-server/server
+$ npm install
 $ npm run start
-```
-
-Tuer un processus qui écoute un port :
-
-```bash
-$ sudo netstat -tulpn | grep LISTEN
-$ kill -9 PROCESS_ID
 ```

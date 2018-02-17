@@ -6,6 +6,7 @@ const express = require('express'),
 
 router.post('/alert', function (req, res) {
   let alert = req.body
+  alert.price = parseInt(alert.price)
   Alerts.create(alert).then(createdAlert => {
     res.json(createdAlert)
   })

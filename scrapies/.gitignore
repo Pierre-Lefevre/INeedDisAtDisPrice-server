@@ -1,2 +1,3 @@
 data/*/*/*
 !data/*/*/.gitignore
+already_crawled.json

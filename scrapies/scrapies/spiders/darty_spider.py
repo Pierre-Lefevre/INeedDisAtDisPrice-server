@@ -35,7 +35,7 @@ class DartySpider(scrapy.Spider):
         # Yield list pages.
         x_pagination = response.xpath('//body[@id="darty_liste_produit"]//div[@id="main_pagination_top"]/div[' + u.x_class('darty_product_list_pages_list') + ']')
         if x_pagination:
-            url_next_page = x_pagination.xpath('./a[text()="\xa0Page suivante"][last()]/@href').extract_first()
+            url_next_page = x_pagination.xpath('./a[text()=" Page suivante"][last()]/@href').extract_first()
             if url_next_page is not None:
                 yield Request(self.base_url + url_next_page.strip(), callback=self.parse)
 

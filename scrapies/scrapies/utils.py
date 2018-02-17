@@ -18,8 +18,6 @@ def get_already_crawled():
     else:
         with open(os.path.join(os.path.dirname(__file__), '..', 'already_crawled.json'), 'r') as inputfile:
             return json.load(inputfile)
-    # with open(os.path.join(os.path.dirname(__file__), '..', 'already_crawled.json'), mode='r', encoding='utf-8') as inputfile:
-    #     return json.load(inputfile)
 
 
 def update_already_crawled(data):
@@ -29,8 +27,6 @@ def update_already_crawled(data):
     else:
         with open(os.path.join(os.path.dirname(__file__), '..', 'already_crawled.json'), 'w') as outfile:
             json.dump(data, outfile, ensure_ascii=False)
-    # with open(os.path.join(os.path.dirname(__file__), '..', 'already_crawled.json'), mode='w', encoding='utf-8') as outfile:
-    #     json.dump(data, outfile, ensure_ascii=False)
 
 
 def get_platform():

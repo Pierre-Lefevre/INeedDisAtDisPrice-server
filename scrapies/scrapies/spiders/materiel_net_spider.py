@@ -81,6 +81,8 @@ class MaterielNetSpider(scrapy.Spider):
 
             # Image
             src = response.xpath('//div[' + u.x_class('swiper-wrapper') + ']//a/@data-zoom-image').extract_first()
+            if src is None:
+                src = response.xpath('//div[@id="container-image"]/@data-zoom-image').extract_first()
             if src is not None:
                 src = src.strip()
 

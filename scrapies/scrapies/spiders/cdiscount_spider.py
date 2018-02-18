@@ -25,6 +25,7 @@ class CdiscountSpider(scrapy.Spider):
     ]
     first = True
     already_crawled = u.get_already_crawled()
+    nb_crawled = 0
 
     def __init__(self):
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -56,7 +57,8 @@ class CdiscountSpider(scrapy.Spider):
 
         # Yield product.
         x_product = response.xpath('//h1[@itemprop="name"]')
-        if x_product:
+        if x_product and self.nb_crawled < 20 :
+            self.nb_crawled += 1
             item = Product()
 
             # Categories

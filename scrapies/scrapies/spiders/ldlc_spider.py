@@ -25,6 +25,7 @@ class LdlcSpider(scrapy.Spider):
         # base_url + '/informatique/pieces-informatique/memoire-pc/c4703/p1e0t7o0a1.html'
     ]
     already_crawled = u.get_already_crawled()
+    nb_crawled = 0
 
     def __init__(self):
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -47,7 +48,8 @@ class LdlcSpider(scrapy.Spider):
 
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('product') + ']')
-        if x_product:
+        if x_product and self.nb_crawled < 20 :
+            self.nb_crawled += 1
             item = Product()
 
             # Categories

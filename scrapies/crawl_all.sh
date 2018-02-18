@@ -8,5 +8,3 @@ scrapy crawl fnac
 scrapy crawl ldlc
 scrapy crawl materiel_net
 scrapy crawl rue_du_commerce
-
-node ../server/utils/loadJsonInDb.js

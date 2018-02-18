@@ -12,7 +12,7 @@ def get_auchan_prices(response):
 
     price = x_price.xpath('.//meta[@itemprop="price"]/@content').extract_first()
     if price is not None:
-        price = u.string_to_float(price.encode('utf-8').strip().replace(" ", ""))
+        price = u.string_to_float(price.encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     currency = x_price.xpath('.//meta[@itemprop="priceCurrency"]/@content').extract_first()
     if currency is not None:
@@ -29,17 +29,17 @@ def get_boulanger_prices(response):
     price_cent_old = x_price.xpath('./span[' + u.x_class('productStrikeoutPrice on') + ']//sup/span[' + u.x_class('fraction') + ']/text()').extract_first()
     if price_old is not None:
         if price_cent_old is not None:
-            price_old = u.string_to_float((price_old.encode('utf-8').strip() + "," + price_cent_old.encode('utf-8').strip()).replace(" ", ""))
+            price_old = u.string_to_float((price_old.encode('utf-8').strip() + "," + price_cent_old.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price_old = u.string_to_float(price_old.encode('utf-8').strip().replace(" ", ""))
+            price_old = u.string_to_float(price_old.encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('./p/span[' + u.x_class('exponent') + ']/text()').extract_first()
     price_cent = x_price.xpath('./p/sup/span[' + u.x_class('fraction') + ']/text()').extract_first()
     if price is not None:
         if price_cent is not None:
-            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent.encode('utf-8').strip()).replace(" ", ""))
+            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price = u.string_to_float(price.encode('utf-8').strip().replace(" ", ""))
+            price = u.string_to_float(price.encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     currency = x_price.xpath('./p/sup/text()').extract_first()
     if currency is not None:
@@ -53,11 +53,11 @@ def get_cdiscount_prices(response):
 
     price_old = x_price.xpath('.//span[' + u.x_class('fpStriked') + ']/text()').extract_first()
     if price_old is not None:
-        price_old = u.string_to_float(re.sub(' .*$', '', price_old.encode('utf-8').strip()).replace(" ", ""))
+        price_old = u.string_to_float(re.sub(' .*$', '', price_old.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('.//span[' + u.x_class('fpPrice price jsMainPrice jsProductPrice') + ']/@content').extract_first()
     if price is not None:
-        price = u.string_to_float(price.encode('utf-8').strip().replace(" ", ""))
+        price = u.string_to_float(price.encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     currency = x_price.xpath('.//meta[@itemprop="priceCurrency"]/@content').extract_first()
     if price is not None:
@@ -74,9 +74,9 @@ def get_darty_prices(response):
 
     if price_old is not None:
         if price_old_cent is not None:
-            price_old = u.string_to_float((re.sub('\D', ' ', price_old.encode('utf-8').strip()) + "," + re.sub('\D', ' ', price_old_cent.encode('utf-8').strip())).replace(" ", ""))
+            price_old = u.string_to_float((re.sub('\D', ' ', price_old.encode('utf-8').strip()) + "," + re.sub('\D', ' ', price_old_cent.encode('utf-8').strip())).replace(" ", "").replace(" ", ""))
         else:
-            price_old = u.string_to_float(re.sub('\D', ' ', price_old.encode('utf-8').strip()).replace(" ", ""))
+            price_old = u.string_to_float(re.sub('\D', ' ', price_old.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('.//meta[@itemprop="price"]/@content').extract_first()
     if price is not None:
@@ -98,9 +98,9 @@ def get_fnac_prices(response):
     price_cent_old = x_price_old.xpath('./sup/text()').extract_first()
     if price_old is not None:
         if price_cent_old is not None:
-            price_old = u.string_to_float((price_old.encode('utf-8').strip() + "," + price_cent_old[1:].encode('utf-8').strip()).replace(" ", ""))
+            price_old = u.string_to_float((price_old.encode('utf-8').strip() + "," + price_cent_old[1:].encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", ""))
+            price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     price = x_price_new.xpath('./text()').extract_first()
     price_cent = x_price_new.xpath('./sup/text()').extract_first()
@@ -113,9 +113,9 @@ def get_fnac_prices(response):
 
     if price is not None:
         if price_cent is not None:
-            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent[1:].encode('utf-8').strip()).replace(" ", ""))
+            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent[1:].encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price = u.string_to_float(price[:-1].encode('utf-8').strip().replace(" ", ""))
+            price = u.string_to_float(price[:-1].encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     return price, price_old, currency
 
@@ -125,7 +125,7 @@ def get_ldlc_prices(response):
 
     price_old = x_price.xpath('.//span[' + u.x_class('refPrice') + ']/text()').extract_first()
     if price_old is not None:
-        price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", ""))
+        price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('.//span[' + u.x_class('price') + ']/text()').extract_first()
     price_cent = x_price.xpath('.//span[' + u.x_class('price') + ']/sup/text()').extract_first()
@@ -136,9 +136,9 @@ def get_ldlc_prices(response):
 
     if price is not None:
         if price_cent is not None:
-            price = u.string_to_float((price[:-1].encode('utf-8').strip() + "," + price_cent.encode('utf-8').strip()).replace(" ", ""))
+            price = u.string_to_float((price[:-1].encode('utf-8').strip() + "," + price_cent.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price = u.string_to_float(price[:-1].encode('utf-8').strip().replace(" ", ""))
+            price = u.string_to_float(price[:-1].encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     return price, price_old, currency
 
@@ -148,7 +148,7 @@ def get_materiel_net_prices(response):
 
     price_old = x_price.xpath('./div[' + u.x_class('prixReference') + ']/text()').extract_first()
     if price_old is not None:
-        price_old = u.string_to_float(re.sub(' \D*$', '', price_old.encode('utf-8').strip()).replace(" ", ""))
+        price_old = u.string_to_float(re.sub(' \D*$', '', price_old.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('./span[' + u.x_class('hidden') + ']/text()').extract_first()
 
@@ -157,7 +157,7 @@ def get_materiel_net_prices(response):
         currency = u.get_currency_code(re.sub('^.*\d | [^ ]*$', '', price.strip()))
 
     if price is not None:
-        price = u.string_to_float(re.sub(' \D*$', '', price.encode('utf-8').strip()).replace(" ", ""))
+        price = u.string_to_float(re.sub(' \D*$', '', price.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
 
     return price, price_old, currency
 
@@ -167,7 +167,7 @@ def get_rue_du_commerce_prices(response):
 
     price_old = x_price.xpath('.//div[' + u.x_class('discount-prices') + ']//p[' + u.x_class('price') + ']/text()').extract_first()
     if price_old is not None:
-        price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", ""))
+        price_old = u.string_to_float(price_old[:-1].encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('.//div[' + u.x_class('price main') + ']/p/text()').extract_first()
     price_cent = x_price.xpath('.//div[' + u.x_class('price main') + ']/p/sup/text()').extract_first()
@@ -178,8 +178,8 @@ def get_rue_du_commerce_prices(response):
 
     if price is not None:
         if price_cent is not None:
-            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent[1:].encode('utf-8').strip()).replace(" ", ""))
+            price = u.string_to_float((price.encode('utf-8').strip() + "," + price_cent[1:].encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
         else:
-            price = u.string_to_float(price.encode('utf-8').strip().replace(" ", ""))
+            price = u.string_to_float(price.encode('utf-8').strip().replace(" ", "").replace(" ", ""))
 
     return price, price_old, currency

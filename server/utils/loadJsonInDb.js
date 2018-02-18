@@ -11,8 +11,6 @@ async function loadJsonInDb () {
 
   await mongoose.connect(config.mongoUrl)
 
-  await Products.collection.remove()
-
   let stores = ['auchan', 'boulanger', 'cdiscount', 'darty', 'fnac', 'ldlc', 'materiel_net', 'rue_du_commerce']
   let jsonFolders = []
   let newIds = []

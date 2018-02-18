@@ -23,10 +23,10 @@ router.get('/api/products', async function (req, res) {
 
   let price = {}
   if (req.query.minPrice && parseInt(req.query.minPrice) !== -1) {
-    price.$gt = parseInt(req.query.minPrice)
+    price.$gte = parseInt(req.query.minPrice)
   }
   if (req.query.maxPrice && parseInt(req.query.maxPrice) !== -1) {
-    price.$lt = parseInt(req.query.maxPrice)
+    price.$lte = parseInt(req.query.maxPrice)
   }
   if (Object.keys(price).length > 0) {
     query.price = price

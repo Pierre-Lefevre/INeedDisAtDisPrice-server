@@ -16,14 +16,14 @@ class MaterielNetSpider(scrapy.Spider):
     allowed_domains = ["materiel.net"]
     base_url = "https://www.materiel.net"
     start_urls = [
-        base_url + '/pc-portable/?p=1',
-        base_url + '/ordinateur/?p=1',
-        base_url + '/tablette-tactile/?p=1',
-        base_url + '/disque-ssd/?p=1',
-        base_url + '/disque-dur/?p=1',
-        base_url + '/disque-dur-externe/?p=1',
-        base_url + '/barrette-memoire-pour-pc/?p=1',
-        base_url + '/barrette-memoire-pour-pc-portable/?p=1'
+        base_url + '/pc-portable/?p=1'
+        # base_url + '/ordinateur/?p=1',
+        # base_url + '/tablette-tactile/?p=1',
+        # base_url + '/disque-ssd/?p=1',
+        # base_url + '/disque-dur/?p=1',
+        # base_url + '/disque-dur-externe/?p=1',
+        # base_url + '/barrette-memoire-pour-pc/?p=1',
+        # base_url + '/barrette-memoire-pour-pc-portable/?p=1'
     ]
     already_crawled = u.get_already_crawled()
 

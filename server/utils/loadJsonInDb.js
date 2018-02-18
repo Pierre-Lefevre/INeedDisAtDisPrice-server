@@ -84,7 +84,7 @@ async function loadJsonInDb () {
 
     // Récupère les mots présents dans plus de 10% des produits.
     if (word.count >= allProducts.length * 0.1) {
-      frequentWords.push(word._id)
+      frequentWords.push(word.word)
       return true
     }
     return false

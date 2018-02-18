@@ -16,11 +16,11 @@ class DartySpider(scrapy.Spider):
     allowed_domains = ["darty.com"]
     base_url = "https://www.darty.com"
     start_urls = [
-        base_url + '/nav/extra/list?p=200&s=topa&cat=756',
-        base_url + '/nav/extra/list?p=200&s=topa&cat=790',
-        base_url + '/nav/extra/list?p=200&s=topa&cat=43554',
-        base_url + '/nav/extra/list?p=200&s=topa&cat=12453&fa=17010-135552-42552',
-        base_url + '/nav/extra/list?cat=98054&s=prix_asc&p=200&aff=GRID&fa=767'
+        base_url + '/nav/extra/list?p=200&s=topa&cat=756'
+        # base_url + '/nav/extra/list?p=200&s=topa&cat=790',
+        # base_url + '/nav/extra/list?p=200&s=topa&cat=43554',
+        # base_url + '/nav/extra/list?p=200&s=topa&cat=12453&fa=17010-135552-42552',
+        # base_url + '/nav/extra/list?cat=98054&s=prix_asc&p=200&aff=GRID&fa=767'
     ]
     already_crawled = u.get_already_crawled()
 

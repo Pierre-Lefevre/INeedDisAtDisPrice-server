@@ -16,12 +16,12 @@ class CdiscountSpider(scrapy.Spider):
     allowed_domains = ["cdiscount.com"]
     base_url = "https://www.cdiscount.com"
     start_urls = [
-        base_url + '/informatique/ordinateurs-pc-portables/pc-portables/l-1070992.html',
-        base_url + '/informatique/achat-pc-ordinateur/tous-les-pc-de-bureau/l-1070840.html',
-        base_url + '/informatique/disques-durs/disque-dur-externe-ssd/l-1073610.html',
-        base_url + '/informatique/disques-durs/disques-durs-externes/l-1073602.html',
-        base_url + '/informatique/disques-durs/disque-dur/l-1073632.html',
-        base_url + '/informatique/memoire-ram/l-10716.html'
+        base_url + '/informatique/ordinateurs-pc-portables/pc-portables/l-1070992.html'
+        # base_url + '/informatique/achat-pc-ordinateur/tous-les-pc-de-bureau/l-1070840.html',
+        # base_url + '/informatique/disques-durs/disque-dur-externe-ssd/l-1073610.html',
+        # base_url + '/informatique/disques-durs/disques-durs-externes/l-1073602.html',
+        # base_url + '/informatique/disques-durs/disque-dur/l-1073632.html',
+        # base_url + '/informatique/memoire-ram/l-10716.html'
     ]
     first = True
     already_crawled = u.get_already_crawled()

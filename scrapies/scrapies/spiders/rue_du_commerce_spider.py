@@ -16,13 +16,13 @@ class RueDuCommerceSpider(scrapy.Spider):
     allowed_domains = ["rueducommerce.fr"]
     base_url = "https://www.rueducommerce.fr"
     start_urls = [
-        base_url + '/rayon/ordinateurs-64/ordinateur-portable-657',
-        base_url + '/rayon/ordinateurs-64/ordinateur-de-bureau-658',
-        base_url + '/rayon/ordinateurs-64/tablette-et-ipad-659',
-        base_url + '/rayon/composants-16/disque-dur-interne-238',
-        base_url + '/rayon/composants-16/disque-dur-externe-236',
-        base_url + '/rayon/composants-16/ssd-248',
-        base_url + '/rayon/composants-16/memoire-pc-245'
+        base_url + '/rayon/ordinateurs-64/ordinateur-portable-657'
+        # base_url + '/rayon/ordinateurs-64/ordinateur-de-bureau-658',
+        # base_url + '/rayon/ordinateurs-64/tablette-et-ipad-659',
+        # base_url + '/rayon/composants-16/disque-dur-interne-238',
+        # base_url + '/rayon/composants-16/disque-dur-externe-236',
+        # base_url + '/rayon/composants-16/ssd-248',
+        # base_url + '/rayon/composants-16/memoire-pc-245'
     ]
     already_crawled = u.get_already_crawled()
 

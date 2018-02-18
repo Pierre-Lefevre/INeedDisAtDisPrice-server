@@ -15,12 +15,12 @@ class AuchanSpider(scrapy.Spider):
     allowed_domains = ["auchan.fr"]
     base_url = "https://www.auchan.fr"
     start_urls = [
-        base_url + '/informatique/ordinateur-portable/c-7638110',
-        base_url + '/informatique/ordinateur-de-bureau/c-7638112',
-        base_url + '/informatique/tablette-tactile/c-7328319',
-        base_url + '/informatique/stockage/disque-dur-interne/c-6721660',
-        base_url + '/informatique/stockage/disque-dur-externe/c-8216',
-        base_url + '/informatique/composant-assemblage/barrette-memoire/c-201612291119'
+        base_url + '/informatique/ordinateur-portable/c-7638110'
+        # base_url + '/informatique/ordinateur-de-bureau/c-7638112',
+        # base_url + '/informatique/tablette-tactile/c-7328319',
+        # base_url + '/informatique/stockage/disque-dur-interne/c-6721660',
+        # base_url + '/informatique/stockage/disque-dur-externe/c-8216',
+        # base_url + '/informatique/composant-assemblage/barrette-memoire/c-201612291119'
     ]
     already_crawled = u.get_already_crawled()
 

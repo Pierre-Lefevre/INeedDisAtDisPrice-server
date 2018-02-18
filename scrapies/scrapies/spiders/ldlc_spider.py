@@ -17,12 +17,12 @@ class LdlcSpider(scrapy.Spider):
     base_url = "https://www.ldlc.com"
     # Only full list pages.
     start_urls = [
-        base_url + '/informatique/ordinateur-portable/pc-portable/c4265/p1e0t7o0a1.html',
-        base_url + '/informatique/ordinateur-de-bureau/pc-de-marque/c4250/p1e0t7o0a1.html',
-        base_url + '/informatique/pieces-informatique/disque-dur-interne/c4697/p1e0t7o0a1.html',
-        base_url + '/informatique/pieces-informatique/disque-ssd/c4698/p1e0t7o0a1.html',
-        base_url + '/informatique/peripherique-pc/disque-dur-externe/c4652/p1e0t7o0a1.html',
-        base_url + '/informatique/pieces-informatique/memoire-pc/c4703/p1e0t7o0a1.html'
+        base_url + '/informatique/ordinateur-portable/pc-portable/c4265/p1e0t7o0a1.html'
+        # base_url + '/informatique/ordinateur-de-bureau/pc-de-marque/c4250/p1e0t7o0a1.html',
+        # base_url + '/informatique/pieces-informatique/disque-dur-interne/c4697/p1e0t7o0a1.html',
+        # base_url + '/informatique/pieces-informatique/disque-ssd/c4698/p1e0t7o0a1.html',
+        # base_url + '/informatique/peripherique-pc/disque-dur-externe/c4652/p1e0t7o0a1.html',
+        # base_url + '/informatique/pieces-informatique/memoire-pc/c4703/p1e0t7o0a1.html'
     ]
     already_crawled = u.get_already_crawled()
 

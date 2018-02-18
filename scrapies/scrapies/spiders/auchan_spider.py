@@ -23,7 +23,6 @@ class AuchanSpider(scrapy.Spider):
         # base_url + '/informatique/composant-assemblage/barrette-memoire/c-201612291119'
     ]
     already_crawled = u.get_already_crawled()
-    nb_crawled = 0
 
     def __init__(self):
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -53,8 +52,7 @@ class AuchanSpider(scrapy.Spider):
 
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('product-detail') + ']')
-        if x_product and self.nb_crawled < 20 :
-            self.nb_crawled += 1
+        if x_product:
             item = Product()
 
             # Categories

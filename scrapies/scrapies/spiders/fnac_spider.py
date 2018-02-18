@@ -25,7 +25,6 @@ class FnacSpider(scrapy.Spider):
     ]
     src_no_image = "https://www4-fr.fnac-static.com/Nav/Images/Noscan/noscan_340x340.gif"
     already_crawled = u.get_already_crawled()
-    nb_crawled = 0
 
     def __init__(self):
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -54,8 +53,7 @@ class FnacSpider(scrapy.Spider):
 
         # Yield product.
         x_product = response.xpath('//div[' + u.x_class('f-productPage') + ']')
-        if x_product and self.nb_crawled < 20 :
-            self.nb_crawled += 1
+        if x_product:
             item = Product()
 
             # Categories

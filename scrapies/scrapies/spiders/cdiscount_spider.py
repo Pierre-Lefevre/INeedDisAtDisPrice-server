@@ -51,14 +51,14 @@ class CdiscountSpider(scrapy.Spider):
             for url in urls:
                 url = url.strip()
                 open_ssl_hash = u.generate_open_ssl_hash(url)
-                if open_ssl_hash not in self.already_crawled:
+                if open_ssl_hash not in self.already_crawled and self.nb_crawled < 300 :
+                    self.nb_crawled += 1
                     self.already_crawled.append(open_ssl_hash)
                     yield Request(url, callback=self.parse)
 
         # Yield product.
         x_product = response.xpath('//h1[@itemprop="name"]')
-        if x_product and self.nb_crawled < 20 :
-            self.nb_crawled += 1
+        if x_product:
             item = Product()
 
             # Categories

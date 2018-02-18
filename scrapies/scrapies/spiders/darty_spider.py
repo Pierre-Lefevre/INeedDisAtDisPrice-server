@@ -23,7 +23,6 @@ class DartySpider(scrapy.Spider):
         # base_url + '/nav/extra/list?cat=98054&s=prix_asc&p=200&aff=GRID&fa=767'
     ]
     already_crawled = u.get_already_crawled()
-    nb_crawled = 0
 
     def __init__(self):
         dispatcher.connect(self.spider_closed, signals.spider_closed)
@@ -53,8 +52,7 @@ class DartySpider(scrapy.Spider):
 
         # Yield product.
         x_product = response.xpath('//body[@id="page_product"]')
-        if x_product and self.nb_crawled < 20 :
-            self.nb_crawled += 1
+        if x_product:
             item = Product()
 
             # Categories

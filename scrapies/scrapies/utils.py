@@ -54,7 +54,7 @@ def get_currency_code(currency_symbol):
 
 
 def string_to_float(string):
-    return float(string.replace(",", ".").replace(" ", ""))
+    return float(string.strip().replace(",", ".").replace(" ", "").replace(" ", ""))
 
 
 def x_class(string):

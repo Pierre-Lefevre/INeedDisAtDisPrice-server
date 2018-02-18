@@ -8,7 +8,7 @@ def get_auchan_prices(response):
 
     price_old = x_price.xpath('.//del[' + u.x_class('product-price--oldPrice') + ']/text()').extract_first()
     if price_old is not None:
-        price_old = u.string_to_float(re.sub(' [^ ]*$', '', price_old.encode('utf-8').strip()).replace(" ", ""))
+        price_old = u.string_to_float(re.sub(' [^ ]*$', '', price_old.encode('utf-8').strip()).replace(" ", "").replace(" ", ""))
 
     price = x_price.xpath('.//meta[@itemprop="price"]/@content').extract_first()
     if price is not None:

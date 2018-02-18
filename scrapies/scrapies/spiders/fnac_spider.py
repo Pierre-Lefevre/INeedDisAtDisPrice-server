@@ -75,7 +75,9 @@ class FnacSpider(scrapy.Spider):
             price, price_old, currency = p.get_fnac_prices(response)
 
             # Image
-            src = response.xpath('//img[' + u.x_class('f-productVisuals-mainMedia') + ']/@src').extract_first().strip()
+            src = response.xpath('//img[' + u.x_class('f-productVisuals-mainMedia') + ']/@src').extract_first()
+            if src is not None:
+                src = src.strip()
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('f-review-header') + ']')

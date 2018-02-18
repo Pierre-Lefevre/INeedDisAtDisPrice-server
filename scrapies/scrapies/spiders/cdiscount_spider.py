@@ -83,7 +83,9 @@ class CdiscountSpider(scrapy.Spider):
             price, price_old, currency = p.get_cdiscount_prices(response)
 
             # Image
-            src = response.xpath('//div[' + u.x_class('fpMainImg') + ']/a[@itemprop="image"]/@href').extract_first().strip()
+            src = response.xpath('//div[' + u.x_class('fpMainImg') + ']/a[@itemprop="image"]/@href').extract_first()
+            if src is not None:
+                src = src.strip()
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('topMainRating') + ']')

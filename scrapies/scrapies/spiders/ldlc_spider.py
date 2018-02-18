@@ -74,7 +74,9 @@ class LdlcSpider(scrapy.Spider):
             price, price_old, currency = p.get_ldlc_prices(response)
 
             # Image
-            src = response.xpath('//img[@id="ctl00_cphMainContent_ImgProduct"]/@src').extract_first().strip()
+            src = response.xpath('//img[@id="ctl00_cphMainContent_ImgProduct"]/@src').extract_first()
+            if src is not None:
+                src = src.strip()
 
             # Avis
             x_avis = response.xpath('//div[@id="productinfos"]//span[' + u.x_class('rating') + ']')

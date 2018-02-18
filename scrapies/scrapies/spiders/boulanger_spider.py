@@ -75,9 +75,9 @@ class BoulangerSpider(scrapy.Spider):
             price, price_old, currency = p.get_boulanger_prices(response)
 
             # Image
-            src = response.xpath('//span[@itemprop="gtin13"]/text()').extract_first().strip()
+            src = response.xpath('//span[@itemprop="gtin13"]/text()').extract_first()
             if src is not None:
-                src = "https://boulanger.scene7.com/is/image/Boulanger/" + src + "_h_f_l_0"
+                src = "https://boulanger.scene7.com/is/image/Boulanger/" + src.strip() + "_h_f_l_0"
 
             # Avis
             x_avis = response.xpath('//div[' + u.x_class('top') + ']/div[' + u.x_class('right') + ']//span[' + u.x_class('rating') + ']')
